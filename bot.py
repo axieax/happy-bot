@@ -2,6 +2,7 @@ import json
 import discord
 import requests
 import random
+import re
 from app import start_server
 
 def random_quote():
@@ -55,12 +56,12 @@ async def on_message(message):
         return
     
     # check messages for negative words
-    parsed_messages = message.content.split(' ')
+    parsed_messages = res.sub(r'[^\w\s]', '', message.content).split(' ')
     sent = False
     for index, word in enumerate(parsed_messages):
         if sent:
             break
-        if word in settings['negative_words']:
+        if word.word in settings['negative_words']:
             if index > 0 and parsed_messages[index - 1].lower() in settings['counter_words']:
                 continue
             if not settings['quiet_mode']:
