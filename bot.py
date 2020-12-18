@@ -2,7 +2,7 @@ import json
 import discord
 import requests
 import random
-from app import 
+from app import start_server
 
 def random_quote():
     # not in quote mode
