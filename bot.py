@@ -61,7 +61,7 @@ async def on_message(message):
     for index, word in enumerate(parsed_messages):
         if sent:
             break
-        if word.word in settings['negative_words']:
+        if word in settings['negative_words']:
             if index > 0 and parsed_messages[index - 1].lower() in settings['counter_words']:
                 continue
             if not settings['quiet_mode']:
