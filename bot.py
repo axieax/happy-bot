@@ -2,6 +2,7 @@ import json
 import discord
 import requests
 import random
+from app import 
 
 def random_quote():
     # not in quote mode
@@ -21,7 +22,6 @@ settings = {
     'negative_words': ['depressed', 'depression', 'sad', 'bad', 'kms', 'no', 'angry', 'die'],
     'positive_words': ['Be happy like me, Happy Bot! XD', 'You have summoned me, Happy Bot! XD'],
 }
-
 
 client = discord.Client()
 
@@ -67,6 +67,7 @@ async def on_message(message):
 
 
 # run bot
+start_server()
 with open('token', 'r') as f:
     lines = f.readlines()
 client.run(lines[0])

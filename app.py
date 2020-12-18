@@ -1,0 +1,15 @@
+from flask import Flask
+from threading import Thread
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "HELLO, WORLD!"
+
+def run():
+    app.run()
+
+def start_server():
+    t = Thread(target=run)
+    t.start()
