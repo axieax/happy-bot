@@ -17,6 +17,7 @@ def random_quote():
 settings = {
     'trigger': '(:',
     'quote_mode': True,
+    'quiet_mode': False,
     'negative_words': ['depressed', 'depression', 'sad', 'bad', 'kms', 'no', 'angry', 'die'],
     'positive_words': ['Be happy like me, Happy Bot! XD', 'You have summoned me, Happy Bot! XD'],
 }
@@ -31,6 +32,14 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.author == client.user or message.author.bot:
+        return
+    # toggle quiet mode
+    if message.content == '):':
+        settings['quiet_mode'] = not settings['quiet_mode']
+        if settings['quiet_mode']:
+            await message.channel.send('ok ill be quiet')
+        else:
+            await message.channel.send('HELLO XD')
         return
     # turn off quote mode
     if message.content == settings['trigger']:
@@ -52,8 +61,9 @@ async def on_message(message):
         if word in settings['negative_words']:
             if index > 0 and parsed_messages[index - 1].lower() == 'not':
                 continue
-            await message.channel.send(random_quote())
-            sent = True
+            if not settings['quiet_mode']:
+                await message.channel.send(random_quote())
+                sent = True
 
 
 # run bot
