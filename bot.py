@@ -6,14 +6,15 @@ from app import start_server
 
 def random_quote():
     # not in quote mode
+    positive = random.choice(settings['positive_words'])
     if not settings['quote_mode']:
-        return random.choice(settings['positive_words'])
+        return positive
     # quote mode
     response = requests.get('https://zenquotes.io/api/random/')
     if response.status_code >= 400:
-        return "Be happy like me, Happy Bot! XD"
+        return positive
     content = json.loads(response.text)[0]
-    return f'Be happy like me, Happy Bot!\n{content["q"]}\n\t- {content["a"]}'
+    return f'{positive}\n{content["q"]}\n\t- {content["a"]}'
 
 settings = {
     'trigger': '(:',
@@ -73,4 +74,4 @@ with open('token', 'r') as f:
     lines = f.readlines()
 client.run(lines[0])
 
-# TODO: implement persistence
+# TODO: implement persistence?
