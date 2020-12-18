@@ -19,6 +19,7 @@ settings = {
     'trigger': '(:',
     'quote_mode': True,
     'quiet_mode': False,
+    'counter_word': ['not', "don't", "dont"]
     'negative_words': ['depressed', 'depression', 'sad', 'bad', 'kms', 'no', 'angry', 'die'],
     'positive_words': ['Be happy like me, Happy Bot! XD', 'You have summoned me, Happy Bot! XD'],
 }
@@ -59,7 +60,7 @@ async def on_message(message):
         if sent:
             break
         if word in settings['negative_words']:
-            if index > 0 and parsed_messages[index - 1].lower() == 'not':
+            if index > 0 and parsed_messages[index - 1].lower() in settings['counter_word']:
                 continue
             if not settings['quiet_mode']:
                 await message.channel.send(random_quote())
