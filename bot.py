@@ -56,7 +56,7 @@ async def on_message(message):
         return
     
     # check messages for negative words
-    parsed_messages = res.sub(r'[^\w\s]', '', message.content).lower().split(' ')
+    parsed_messages = re.sub(r'[^\w\s]', '', message.content).lower().split(' ')
     sent = False
     for index, word in enumerate(parsed_messages):
         if sent:
