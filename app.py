@@ -8,7 +8,7 @@ def home():
     return "HELLO, WORLD!"
 
 def run():
-    app.run()
+    app.run(host='0.0.0.0')
 
 def start_server():
     t = Thread(target=run)
