@@ -1,2 +1,2 @@
 # happy-bot
-Discord bot for encouraging positivity
+Discord bot for spreading positivity :)
