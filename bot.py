@@ -76,3 +76,5 @@ with open('token', 'r') as f:
 client.run(lines[0])
 
 # TODO: implement persistence?
+# Random bible verse API instead of quote?
+# Sentiment Analysis to create model instead
