@@ -139,3 +139,6 @@ cython_debug/
 
 # Discord Bot Token
 token
+
+# training dataset
+train.csv
