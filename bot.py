@@ -22,7 +22,7 @@ settings = {
     'quote_mode': True,
     'quiet_mode': False,
     'counter_words': ['not', "don't", "dont"],
-    'negative_words': ['depressed', 'depression', 'sad', 'bad', 'kms', 'no', 'angry', 'die'],
+    'negative_words': ['depressed', 'depression', 'sad', 'bad', 'kms', 'no', 'angry', 'die', ':(', 'sadge'],
     'positive_words': ['Be happy like me, Happy Bot! XD', 'You have summoned me, Happy Bot! XD'],
 }
 
