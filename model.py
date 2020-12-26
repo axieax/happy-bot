@@ -20,11 +20,13 @@ print(df.head)
 
 ''' Pre-process data '''
 # remember to process discord user input with the same function - discord emotes? extra whitespace? text formatting (e.g. **text**)?
-# certain stopwords (excluding negation such as 'not' and abbreviations)
+# certain stopwords (excluding negation such as 'not' and abbreviations such as dont) - process abbreviations as well?
 # emojis such as :( for sad  ********** CONSIDER ************
 stopwords = [] # exclude numbers as well?
 
 def text_preprocess(text):
+    # ensure all characters are lowercase
+    text = text.lower()
     # remove @mentions (could use '@\w+' instead)
     text = re.sub(r'@[a-zA-Z0-9_]+', '', text)
     # remove hashtags ('#tag' but not 'phone #' or 'phone #?')
@@ -39,6 +41,14 @@ def text_preprocess(text):
     text = re.sub(r'_{0,1}&gt;', '>', text)
     # replace &amp with &
     text = re.sub(r'_{0,1}&amp;', ' and ', text) # instead of &
+
+    # abbreviations
+    text = re.sub(r'don\'{0,1}t', 'do not', text) # don't
+    text = re.sub(r'can\'{0,1}t', 'can not', text) # can't
+
+    # remove numbers - TODO
+
+    # how about forgotten spaces??
 
     # NOTE: haven't filtered punctuation - only keep ascii alphanumeric characters?
     # filter after checking that the whole word is ascii? (could use recursion - split word into smaller e.g. a,b => a, b) - check notes.md
