@@ -41,7 +41,7 @@ def text_preprocess(text):
     # remove sequences of dots or commas after a word
     text = re.sub(r'(?<=[a-zA-Z\"])[\.,]+', ' ', text)
     # separate brackets
-    text = re.sub(r'[\(\[]](?=[a-zA-Z])', ' ( ', text)
+    text = re.sub(r'[\(\[](?=[a-zA-Z])', ' ( ', text)
     text = re.sub(r'(?<=[a-zA-Z])[\)\]]', ' ) ', text)
 
     # expand contractions
