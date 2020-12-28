@@ -3,6 +3,9 @@ import discord
 import requests
 import random
 import re
+import os
+import pickle
+from model import text_preprocess, train_model
 from app import start_server
 
 def random_quote():
@@ -72,9 +75,16 @@ async def on_message(message):
 # run bot
 start_server()
 with open('token', 'r') as f:
-    lines = f.readlines()
-client.run(lines[0])
+    token = f.read().rstrip()
+if os.path.exists('model.pkl'):
+    model = pickle.load(open('model.pkl', 'rb'))
+else:
+    model = train_model()
+
+client.run(token)
 
 # TODO: implement persistence?
 # Random bible verse API instead of quote?
 # Sentiment Analysis to create model instead
+
+# react for feedback

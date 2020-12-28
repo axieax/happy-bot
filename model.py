@@ -1,18 +1,25 @@
 ''' General data manipulation utilities '''
 import numpy as np
 import pandas as pd
+import pickle
 
 ''' Text processing utilities '''
 import re
+import contractions
+from autocorrect import Speller
 from nltk.stem import PorterStemmer
+from nltk.corpus import stopwords
 ps = PorterStemmer()
-
+spell_checker = Speller()
+with open('stopwords', 'r') as f:
+    stopwords = [line.rstrip() for line in f.readlines()]
+# format this block
 
 ''' Extract data '''
 # polarity 0 represents negative, 2 represents neutral, 4 represents positive
 features = ['polarity', 'id', 'date', 'flag-query', 'user', 'text']
 # nrows param for pre-production testing (REMOVE)
-df = pd.read_csv('train.csv', names=features, encoding='ISO-8859-1', nrows=52000)
+df = pd.read_csv('train.csv', names=features, encoding='ISO-8859-1', nrows=520)
 # ignore unncessary features
 df = df[['polarity', 'text']]
 print(df.head)
@@ -22,11 +29,8 @@ print(df.head)
 # remember to process discord user input with the same function - discord emotes? extra whitespace? text formatting (e.g. **text**)?
 # certain stopwords (excluding negation such as 'not' and abbreviations such as dont) - process abbreviations as well?
 # emojis such as :( for sad  ********** CONSIDER ************
-stopwords = [] # exclude numbers as well?
 
 def text_preprocess(text):
-    # ensure all characters are lowercase
-    text = text.lower()
     # remove @mentions (could use '@\w+' instead)
     text = re.sub(r'@[a-zA-Z0-9_]+', '', text)
     # remove hashtags ('#tag' but not 'phone #' or 'phone #?')
@@ -42,26 +46,34 @@ def text_preprocess(text):
     # replace &amp with &
     text = re.sub(r'_{0,1}&amp;', ' and ', text) # instead of &
 
-    # abbreviations
-    text = re.sub(r'don\'{0,1}t', 'do not', text) # don't
-    text = re.sub(r'can\'{0,1}t', 'can not', text) # can't
+    # remove / not following a :, -, or ^
+    text = re.sub(r'(?<=[^:\^-])\/', ' ', text)
+    # remove numbers and quotation marks
+    text = re.sub(r'[\"\d]', ' ', text)
+    # remove sequences of dots or commas after a word
+    text = re.sub(r'(?<=[a-zA-Z\"])[\.,]+', ' ', text)
+    # spell check
+    # text = spell_checker(text)
+    # contractions
+    text = contractions.fix(text) # some edge cases and double contractions - better to use pycontractions (currently unable to install)
 
-    # remove numbers - TODO
+    # separate brackets
+    text = re.sub(r'\((?=[a-zA-Z0-9])', ' ( ', text)
+    text = re.sub(r'(?<=[a-zA-Z0-9])\)', ' ) ', text)
 
-    # how about forgotten spaces??
-
-    # NOTE: haven't filtered punctuation - only keep ascii alphanumeric characters?
-    # filter after checking that the whole word is ascii? (could use recursion - split word into smaller e.g. a,b => a, b) - check notes.md
-    # tw.c - i replaced punctuation with space - but does punctuation matter for sentiment analysis??
+    # ensure all characters are lowercase
+    text = text.lower()
 
     # stem and check for stopwords
     line = []
-    for token in text.split():
+    for token in text.split(): # split by punctuation as well
         word = ps.stem(token)
-        # ignore non-ascii tokens and stopwords
-        if word.isascii() and word not in stopwords:
+        # filter word
+        # ensure token is significant (more than one character), ignore non-ascii tokens and stopwords
+        if len(word) > 1 and word.isascii() and word not in stopwords:
             line.append(word)
-    return ' '.join(line) # .strip() as well?
+    print(' '.join(line))
+    return ' '.join(line) # .strip() unnecessary
 
 
 # pre-process text and remove those less than or equal to 1 characters in length
@@ -75,3 +87,10 @@ df = df[df['text'].str.len() > 1]
 
 X = df['text']
 y = df['polarity']
+
+def train_model():
+    # pickles model and returns model
+    pass
+
+if __name__ == '__main__':
+    train_model()
